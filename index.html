@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Formulario Multi-Step con HTMX</title>
+  <meta name="description" content="Formulario Multi-Step con HTMX">
+  <meta name="keywords" content="Formulario, Multi-Step, HTMX, Bootstrap">
+  <meta name="author" content="Urian Viera">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="home.css">
+</head>
+<body>
+
+<!-- Contenedor principal del formulario multi-paso -->
+<div class="container py-5" 
+  id="formContainer" 
+  hx-get="step1.html" 
+  hx-trigger="load"
+  hx-swap="innerHTML">
+</div>
+
+
+<!-- Footer fijo con barra de progreso y botones de navegación -->
+<div class="form-footer">
+  <!-- Barra de progreso en la parte superior -->
+  <div class="progress">
+    <div class="progress-bar bg-primary" role="progressbar" style="width: 33%;" id="progressBar"></div>
+  </div>
+  <!-- Botones de navegación en la parte inferior -->
+  <div class="d-flex justify-content-between align-items-center p-3">
+    <button type="button" class="btn btn-outline-secondary" id="backBtn" disabled>← Atrás</button>
+    <button type="button" class="btn btn-primary" id="nextBtn">Siguiente →</button>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/htmx.org@2.0.6/dist/htmx.min.js" integrity="sha384-Akqfrbj/HpNVo8k11SXBb6TlBWmXXlYQrCSqEWmyKJe+hDm3Z/B2WVG4smwBkRVm" crossorigin="anonymous"></script>
+
+<script>
+  // Variable global para rastrear el paso actual del formulario
+  let currentStep = 1;
+  /**
+   * Función principal para cargar el contenido del paso actual
+   * Actualiza el contenido del formulario, la barra de progreso y los botones
+   */
+  function loadStep() {
+    // Configura HTMX para cargar el archivo HTML del paso actual
+    document.querySelector('#formContainer').setAttribute('hx-get', `step${currentStep}.html`);
+    // Procesa el elemento con HTMX para aplicar los atributos
+    htmx.process(document.querySelector('#formContainer'));
+    // Dispara el evento 'load' para cargar el contenido
+    document.querySelector('#formContainer').dispatchEvent(new Event('load'));
+
+    // Actualiza la barra de progreso según el paso actual
+    const progress = { 1: '33%', 2: '66%', 3: '100%' }[currentStep];
+    document.querySelector('#progressBar').style.width = progress;
+
+    // Configura el estado de los botones de navegación
+    document.querySelector('#backBtn').disabled = currentStep === 1; // Deshabilita "Atrás" en el primer paso
+    document.querySelector('#nextBtn').textContent = currentStep === 3 ? 'Enviar formulario' : 'Siguiente →'; 
+  }
+
+
+  /**
+   * Event listener para el botón "Next/Submit"
+   * Maneja la navegación hacia adelante y el envío del formulario
+   */
+  document.querySelector('#nextBtn').addEventListener('click', () => {
+    if (currentStep === 3) {
+      alert('Formulario enviado!');
+      // Aquí puedes agregar la lógica real de envío del formulario
+    } else {
+      // En los pasos 1 y 2, navega al siguiente paso
+      currentStep++;
+      loadStep();
+    }
+  });
+
+  /**
+   * Event listener para el botón "Atrás"
+   * Permite regresar al paso anterior
+   */
+  document.getElementById('backBtn').addEventListener('click', () => {
+    currentStep--;
+    loadStep();
+  });
+</script>
+</body>
+</html>
