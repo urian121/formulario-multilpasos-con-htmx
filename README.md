@@ -2,6 +2,8 @@
 
 Un ejemplo práctico de cómo crear un formulario multipasos moderno y responsivo utilizando solo HTML, CSS y HTMX, sin necesidad de frameworks JavaScript complejos.
 
+![Vista Previa](https://raw.githubusercontent.com/urian121/imagenes-proyectos-github/refs/heads/master/formulario-multipasos-con-html-y-htmx.png)
+
 ## 🚀 Características
 
 - **Formulario de 3 pasos**: Localización, Información de contacto y Revisión
